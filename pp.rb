@@ -11,7 +11,7 @@ options = OpenStruct.new
 # set defaults
 options.input = "/dev/stdin"
 options.output = "/dev/stdout"
-options.macros = "macros.rb"
+options.macros = "macros/macros.rb"
 options.ms_iters = 0
 
 OptionParser.new do |opt|

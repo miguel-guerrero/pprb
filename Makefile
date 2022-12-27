@@ -11,8 +11,8 @@ test: $(OUT)
 
 out/%: corpus/pp.%
 	./pp.rb -i $< -o $@
-	echo "diff corpus/gold/$* out/$* -q"
-	diff corpus/gold/$* out/$* -q || { echo "ERROR comparison with golden failed for $@"; exit 1; }
+	echo "diff -q corpus/gold/$* out/$*"
+	@diff -q corpus/gold/$* out/$* || { echo "ERROR comparison with golden failed for $@"; exit 1; }
 
 unit_test:
 	./unit_test/test_stream.rb
