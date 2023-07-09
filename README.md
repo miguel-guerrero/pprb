@@ -16,7 +16,7 @@ Usage:
 The preprocessor performs 2 passes over the input file:
 
 - Pass 1: ruby substitution pass. During this step any ruby control code is expanded. Ruby control code is
-  provided in lines that start with '//>' character sequence. For example:
+  provided in lines that start with `//>` character sequence. For example:
 
   <corpus/pp.example1.txt>
   
@@ -55,5 +55,13 @@ Note that #{expr} can be used to interpolate the value on ruby expressions on th
 To run internal the regression:
 
     $ make
+
+## Internals
+
+Expansion is done by generating an intermediate ruby script. Code prefixed by `//>` is emited as-is without
+the prefix. Text without this prefix is emitted as a print statement taking care of appropriate quoting where
+needed.
+
+Each iteration of macro expansion follows a similar process.
 
     
