@@ -1,0 +1,3 @@
+//> 3.times do |i|
+This will generate 3 lines. This one is #{i+1}
+//> end
