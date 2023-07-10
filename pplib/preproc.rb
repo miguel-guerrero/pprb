@@ -8,12 +8,17 @@ module PreProc
     $openchars  = "({"
     $closechars = ")}"
 
+    # skip in the input stream up to a given closing character
+    # taking care of skipping over nested pairs till finding the
+    # matching closing one
     def skipTill(closingChar, stream)
         while !stream.eof
             c = stream.pop(1)
             if c == closingChar
                 return
             else 
+                # if the character is an opening char skip till the matching
+                # closing one recursively
                 idx = $openchars.index(c)
                 if idx
                     skipTill($closechars[idx], stream)
@@ -23,6 +28,8 @@ module PreProc
         raise "Closing character '#{closingChar}' not found in: #{stream.to_s}"
     end
 
+    # get the next argument enclosed in () or {} or if not enclosed upto the
+    # next comma ,
     def extractOneArgument(stream)
         b = stream.pos
         while !stream.eof
@@ -38,6 +45,8 @@ module PreProc
         raise "Couldn't extract one argument from #{stream.to_s}"
     end
 
+    # enclosed arguments may be optionally followed by a comman, if
+    # present, skip it
     def skipOptionalComma(stream)
         while !stream.eof
             c = stream.pop(1)
@@ -50,6 +59,7 @@ module PreProc
         end
     end
 
+    # extract the given amount of arguments
     def extractCountArguments(wantedArgCnt, stream)
         args = []
         while !stream.eof
@@ -64,6 +74,9 @@ module PreProc
         raise "Could not extract #{wantedArgCnt} arguments (only #{args.length}) following #{stream.to_s}"
     end
 
+    # extract a full macro call given the expected number of parameters
+    # return also the indentation level where the invokation is, as this
+    # can be used to propperly format the expansion
     def extractMacroCall(stream, funArities)
         line = stream.peekline.chomp
         macroCall = ""
@@ -85,6 +98,8 @@ module PreProc
         [macroCall, indent]
     end
 
+    # return true of the line contains a function definition (i.e. because we
+    # search on macro files this would be a macro)
     def isDef(line)
         line =~ /\s*def\s+/
     end
@@ -139,6 +154,8 @@ module PreProc
         [macroName, arity]
     end 
 
+    # scan a file for macro definitions and extract the number of expected
+    # parameters for each one (its arity). Fill-up funArities with that info
     def extractArities(fileName)
         funArities = {}
         lines = file2str(fileName)
@@ -156,6 +173,7 @@ module PreProc
         funArities
     end
 
+    # return true if a line starts witha a macro invokation as :macroName:
     def hasMacroInvokation(s)
         s =~ /^\s*:\w+:/
     end
@@ -191,9 +209,10 @@ module PreProc
     def macroSubstPass(fileIn, fileOut, fileMacros, maxIters)
         a = fileIn
         t = "pass2.rb"
-        b = "pass2.out"
+        bBase = "pass2.out"
         i = 1
         loop do
+            b = bBase + "." + i.to_s
             puts "-- Iter #{i} --"
             macroSubst(a, t, b, fileMacros, i)
             if file_eq(a, b) or (maxIters > 0 and i == maxIters)
@@ -201,7 +220,6 @@ module PreProc
                 return
             end
             a = b
-            b = b + "t"
             i += 1
         end
     end

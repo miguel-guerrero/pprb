@@ -1,3 +1,6 @@
+# class that handles an input string as an stream of characters
+# with useful methods to move about
+
 class Stream
     attr_reader :pos, :lineNum
 

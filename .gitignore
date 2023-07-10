@@ -57,3 +57,7 @@ build-iPhoneSimulator/
 
 # custom
 **/legacy
+
+out/*
+pass1.*
+pass2.*
