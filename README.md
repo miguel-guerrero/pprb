@@ -44,8 +44,9 @@ Note that #{expr} can be used to interpolate the value on ruby expressions on th
 
   Macros are invoked as `:macroName:` `arg1` `arg2` ...
 
-  Each argument `argi` is a parenthesized expresion `(...)` or a block surrounded by brackets `{...}`. Either of them
-  can be multiline. `pp.rb` collects the arguments and passes them to user defined code (in ruby). The ruby macro
+  Each argument `argi` is a parenthesized expresion `(...)` or a block surrounded by brackets `{...}` or
+  any text until the first apearence of a commna `,`. Either parenthesized or bracket expressions can be
+  multiline. `pp.rb` collects the arguments and passes them to user defined code (in ruby). The ruby macro
   file can be passed to `pp.rb` with the `-m` command line argument. See `macros/macros.rb` for a default file
   used on internal regression. Once the macros are expanded another iteration of macro expansion is started to
   expand potentially nested macros.
